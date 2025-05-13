@@ -1,0 +1,6 @@
+script.build/
+script.dist/
+script.onefile-build/
+icon.icon
+script.exe
+venv
