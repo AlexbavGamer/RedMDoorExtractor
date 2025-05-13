@@ -117,18 +117,20 @@ class DoorExtractorApp:
                         position = entity.find('position')
                         coords = [position.get(axis) for axis in ['x', 'y', 'z']]
                         
-                        for extension in entity.findall(".//Item[@type='SSxlGTA_0xDB12012B']"):
-                            has_doors = True
-                            door_id = getJenkinHash(bytearray(extension.find('Id').text, 'utf-8'))
-                            model_hash = getJenkinHash(bytearray(modelname, "utf-8"))
-                            door_entry = {
-                                'door_id': door_id,
-                                'model_hash': model_hash,
-                                'modelname': modelname,
-                                'coords': coords,
-                                'original_id': extension.find("Id").text
-                            }
-                            door_data_dict[door_id] = door_entry
+                        for extension in entity.findall(".//Item"):
+                            if extension.get('type') in ['SSxlGTA_0xDB12012B', 'CExtensionDefDoor'] and extension.find('Id') is not None and extension.find('Id').text is not None:                            
+                                has_doors = True
+
+                                door_id = getJenkinHash(bytearray(extension.find('Id').text, 'utf-8'))
+                                model_hash = getJenkinHash(bytearray(modelname, "utf-8"))
+                                door_entry = {
+                                    'door_id': door_id,
+                                    'model_hash': model_hash,
+                                    'modelname': modelname,
+                                    'coords': coords,
+                                    'original_id': extension.find("Id").text
+                                }
+                                door_data_dict[door_id] = door_entry
 
             if has_doors:
                 with open(output_path, 'w') as f:
